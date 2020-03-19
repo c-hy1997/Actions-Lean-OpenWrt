@@ -18,13 +18,15 @@ on:
       - 'x86.config'
 #  schedule:
 #    - cron: 0 8 * * 5
-#  watch:
-#    types: [started]
+  watch:
+    types: [started]
 
 env:
   REPO_URL: https://github.com/coolsnowwolf/lede
   REPO_BRANCH: master
   CONFIG_FILE: x86.config
+  FEED_FILE: feeds.conf.default1
+  MAKE_FILE: Makefile1
   DIY_SH: diy.sh
   FREE_UP_DISK: false
   SSH_ACTIONS: false
@@ -64,8 +66,30 @@ jobs:
     - name: Clone source code
       run: git clone --depth 1 $REPO_URL -b $REPO_BRANCH openwrt
 
+    - name: Import external feeds and kernel
+      run: |
+        [ -e files ] && mv files openwrt/files
+        [ -e $FEED_FILE ] && mv $FEED_FILE openwrt/feeds.conf.default
+        [ -e $MAKE_FILE ] && mv $MAKE_FILE openwrt/target/linux/x86/Makefile
+
     - name: Update feeds
       run: cd openwrt && ./scripts/feeds update -a
+
+    - name: Delete Some Packges
+      run: |
+        cd openwrt
+        rm -rf feeds/lienol/lienol/ipt2socks
+        rm -rf feeds/lienol/lienol/shadowsocksr-libev
+        rm -rf feeds/lienol/lienol/pdnsd-alt
+        rm -rf feeds/lienol/package/verysync
+        rm -rf feeds/lienol/lienol/luci-app-verysync
+        rm -rf package/lean/kcptun
+        rm -rf package/lean/trojan
+        rm -rf package/lean/v2ray
+        rm -rf package/lean/luci-app-kodexplorer
+        rm -rf package/lean/luci-app-pppoe-relay
+        rm -rf package/lean/luci-app-pptp-server
+        rm -rf package/lean/luci-app-v2ray-server
 
     - name: Install feeds
       run: cd openwrt && ./scripts/feeds install -a
