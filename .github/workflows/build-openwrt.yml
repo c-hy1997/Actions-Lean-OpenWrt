@@ -18,8 +18,8 @@ on:
       - 'x86.config'
 #  schedule:
 #    - cron: 0 8 * * 5
-#  watch:
-#    types: [started]
+  watch:
+    types: [started]
 
 env:
   REPO_URL: https://github.com/coolsnowwolf/lede
@@ -28,9 +28,9 @@ env:
   FEED_FILE: feeds.conf.default1
   MAKE_FILE: Makefile1
   DIY_SH: diy.sh
-  FREE_UP_DISK: false
-  SSH_ACTIONS: false
-  UPLOAD_BIN_DIR: false
+  FREE_UP_DISK: true
+  SSH_ACTIONS: true
+  UPLOAD_BIN_DIR: true
   UPLOAD_FIRMWARE: true
   TZ: Asia/Shanghai
 
@@ -72,16 +72,16 @@ jobs:
         cd openwrt
         rm feeds.conf.default
 
-    - name: Delete Makefile Configfiles
-      run: |
-        cd openwrt/target/linux/x86/
-        rm Makefile
+    #- name: Delete Makefile Configfiles
+    #  run: |
+    #    cd openwrt/target/linux/x86/
+    #    rm Makefile
 
     - name: Import external feeds and kernel
       run: |
         [ -e files ] && mv files openwrt/files
         [ -e $FEED_FILE ] && mv $FEED_FILE openwrt/feeds.conf.default
-        [ -e $MAKE_FILE ] && mv $MAKE_FILE openwrt/target/linux/x86/Makefile
+    #    [ -e $MAKE_FILE ] && mv $MAKE_FILE openwrt/target/linux/x86/Makefile
 
     - name: Update feeds
       run: cd openwrt && ./scripts/feeds update -a
