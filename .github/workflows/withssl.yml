@@ -72,16 +72,16 @@ jobs:
         cd openwrt
         rm feeds.conf.default
 
-    - name: Delete Makefile Configfiles
-      run: |
-        cd openwrt/target/linux/x86/
-        rm Makefile
+    #- name: Delete Makefile Configfiles
+    #  run: |
+    #    cd openwrt/target/linux/x86/
+    #    rm Makefile
 
     - name: Import external feeds and kernel
       run: |
         [ -e files ] && mv files openwrt/files
         [ -e $FEED_FILE ] && mv $FEED_FILE openwrt/feeds.conf.default
-        [ -e $MAKE_FILE ] && mv $MAKE_FILE openwrt/target/linux/x86/Makefile
+    #    [ -e $MAKE_FILE ] && mv $MAKE_FILE openwrt/target/linux/x86/Makefile
 
     - name: Update feeds
       run: cd openwrt && ./scripts/feeds update -a
